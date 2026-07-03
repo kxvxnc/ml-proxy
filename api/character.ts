@@ -38,7 +38,9 @@ export default async (req: VercelRequest, res: VercelResponse): Promise<void> =>
   }
 
   try {
-    const apiResponse = await fetch(`https://maplelegends.com/api/character?name=${encodeURIComponent(name)}`);
+    const apiResponse = await fetch(
+      `https://legends.ml/api/character?name=${encodeURIComponent(name)}`,
+    );
     
     if (!apiResponse.ok) {
       throw new Error(`API responded with status: ${apiResponse.status}`);
