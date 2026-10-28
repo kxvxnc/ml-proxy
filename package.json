@@ -16,7 +16,7 @@
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^24.19.2",
     "@vercel/node": "^3.2.2",
     "typescript": "^5.5.3"
   }
