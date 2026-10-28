@@ -14,11 +14,20 @@ interface CharacterData {
   fame: number
 }
 
+const ALLOWED_ORIGIN = 'https://leech-calculator-mirror.vercel.app';
+const VALID_NAME = /^[A-Za-z0-9]{1,16}$/;
+
 export default async (req: VercelRequest, res: VercelResponse): Promise<void> => {
+  // Only the mirror site may use this proxy
+  res.setHeader('Vary', 'Origin');
+  if (req.headers.origin !== ALLOWED_ORIGIN) {
+    res.status(403).json({ error: 'Origin not allowed' });
+    return;
+  }
+
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST,PUT,DELETE');
+  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
@@ -34,6 +43,11 @@ export default async (req: VercelRequest, res: VercelResponse): Promise<void> =>
 
   if (typeof name !== 'string' || !name) {
     res.status(400).json({ error: 'Name parameter is required and must be a string' });
+    return;
+  }
+
+  if (!VALID_NAME.test(name)) {
+    res.status(400).json({ error: 'Name must be 1-16 letters or numbers' });
     return;
   }
 
